@@ -45,7 +45,7 @@ export default {
     /* ------------------ */
     if (interaction.type === 2 && interaction.data.name === "echo") {
       const text = interaction.data.options?.[0]?.value ?? "";
-      const user = interaction.member.user.username;
+      const user = interaction.member.displayName;
 
       // Fire GitHub Actions (do NOT await results)
       await fetch(
