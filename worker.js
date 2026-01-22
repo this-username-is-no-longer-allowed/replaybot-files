@@ -87,7 +87,7 @@ async function verifyDiscordRequest(body, signature, timestamp, publicKey) {
   const encoder = new TextEncoder();
 
   const message = encoder.encode(timestamp + body);
-  co'nst sig = hexToUint8Array(signature);
+  const sig = hexToUint8Array(signature);
   const key = hexToUint8Array(publicKey);
 
   const cryptoKey = await crypto.subtle.importKey(
