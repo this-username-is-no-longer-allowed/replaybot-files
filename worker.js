@@ -61,7 +61,7 @@ export default {
             ref: "main",
             inputs: {
               job_id: interaction,
-              callback_url: 'https://replaybot-files.magiclanius.workers.dev'
+              callback_url: 'https://replaybot-files.magiclanius.workers.dev',
               replay_url: text
             }
           })
