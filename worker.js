@@ -49,7 +49,7 @@ export default {
 
       // Fire GitHub Actions (do NOT await results)
       await fetch(
-        "https://api.github.com/repos/this-username-is-no-longer-allowed/replaybot-backend/actions/workflows/echo.yml/dispatches",
+        "https://api.github.com/repos/this-username-is-no-longer-allowed/replaybot-backend/actions/workflows/job.yml/dispatches",
         {
           method: "POST",
           headers: {
