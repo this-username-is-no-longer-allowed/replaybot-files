@@ -60,8 +60,9 @@ export default {
           body: JSON.stringify({
             ref: "main",
             inputs: {
-              user,
-              text
+              job_id: interaction,
+              callback_url: 'https://replaybot-files.magiclanius.workers.dev'
+              replay_url: text
             }
           })
         }
@@ -86,7 +87,7 @@ async function verifyDiscordRequest(body, signature, timestamp, publicKey) {
   const encoder = new TextEncoder();
 
   const message = encoder.encode(timestamp + body);
-  const sig = hexToUint8Array(signature);
+  co'nst sig = hexToUint8Array(signature);
   const key = hexToUint8Array(publicKey);
 
   const cryptoKey = await crypto.subtle.importKey(
