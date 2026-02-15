@@ -38,14 +38,18 @@ export default {
     }
 
     if (interaction.type === 2) {
+      const options = Object.fromEntries(
+        (interaction.data.options || []).map(item => [item.name, item.value])
+      );
       const payload = {
-        job: interaction.data.name,
-        jobId: interaction.id,
-        replayUrl: interaction.data.options?.[0]?.value ?? '',
+        job: {
+          name: interaction.data.name,
+          id: interaction.id
+        },
         webhookUrl: `https://discord.com/api/webhooks/${interaction.application_id}/${interaction.token}`,
-        displayName: interaction.member.global_name,
+        displayName: interaction.member?.user.global_name || interaction?.user.global_name,
         userId: interaction.member?.user?.id || interaction.user?.id,
-        inputs: interaction.data.options
+        inputs: options
       };
 
       // Direct Inject & Wakeup
@@ -62,6 +66,8 @@ export default {
           })
         });
       };
+      
+      request.waitUntil(injectAndWake());
 
       // Defer reply (Discord shows "thinking…")
       return new Response(
