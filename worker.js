@@ -30,9 +30,6 @@ export default {
 
     const interaction = JSON.parse(body);
 
-    /* ------------------ */
-    /* 1️⃣ Discord PING   */
-    /* ------------------ */
     if (interaction.type === 1) {
       return new Response(
         JSON.stringify({ type: 1 }),
@@ -40,17 +37,15 @@ export default {
       );
     }
 
-    /* ------------------ */
-    /* 2️⃣ Slash command */
-    /* ------------------ */
     if (interaction.type === 2) {
       const payload = {
         job: interaction.data.name,
         jobId: interaction.id,
         replayUrl: interaction.data.options?.[0]?.value ?? '',
         webhookUrl: `https://discord.com/api/webhooks/${interaction.application_id}/${interaction.token}`,
-        displayName: interaction.member.displayName,
-        userId: interaction.member?.user?.id || interaction.user?.id
+        displayName: interaction.member.global_name,
+        userId: interaction.member?.user?.id || interaction.user?.id,
+        inputs: interaction.data.options
       };
 
       // Direct Inject & Wakeup
@@ -78,10 +73,6 @@ export default {
     return new Response("Unhandled interaction", { status: 400 });
   }
 };
-
-/* ================================================= */
-/* 🔐 Discord signature verification (REQUIRED)      */
-/* ================================================= */
 
 async function verifyDiscordRequest(body, signature, timestamp, publicKey) {
   const encoder = new TextEncoder();
