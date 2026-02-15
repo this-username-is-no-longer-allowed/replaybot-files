@@ -43,30 +43,30 @@ export default {
     /* ------------------ */
     /* 2️⃣ Slash command */
     /* ------------------ */
-    if (interaction.type === 2 && interaction.data.name === "echo") {
-      const text = interaction.data.options?.[0]?.value ?? "";
-      const user = interaction.member.displayName;
+    if (interaction.type === 2) {
+      const payload = {
+        job: interaction.data.name,
+        jobId: interaction.id,
+        replayUrl: interaction.data.options?.[0]?.value ?? '',
+        webhookUrl: `https://discord.com/api/webhooks/${interaction.application_id}/${interaction.token}`,
+        displayName: interaction.member.displayName,
+        userId: interaction.member?.user?.id || interaction.user?.id
+      };
 
-      // Fire GitHub Actions (do NOT await results)
-      await fetch(
-        "https://api.github.com/repos/this-username-is-no-longer-allowed/replaybot-backend/actions/workflows/job.yml/dispatches",
-        {
+      // Direct Inject & Wakeup
+      const injectAndWake = async () => {
+        await fetch(`https://huggingface.co/api/spaces/${env.HF_SPACE_ID}/variables`, {
           method: "POST",
           headers: {
-            "Authorization": `Bearer ${env.GITHUB_TOKEN}`,
-            "Accept": "application/vnd.github+json",
-            "Content-Type": "application/json"
+            "Authorization": `Bearer ${env.HF_TOKEN}`,
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            ref: "main",
-            inputs: {
-              job_id: interaction,
-              callback_url: 'https://replaybot-files.magiclanius.workers.dev',
-              replay_url: text
-            }
+            key: "CURRENT_JOB_JSON",
+            value: JSON.stringify(payload)
           })
-        }
-      );
+        });
+      };
 
       // Defer reply (Discord shows "thinking…")
       return new Response(
