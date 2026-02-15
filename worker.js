@@ -47,7 +47,7 @@ export default {
           id: interaction.id
         },
         webhookUrl: `https://discord.com/api/webhooks/${interaction.application_id}/${interaction.token}`,
-        displayName: interaction.member?.user.global_name || interaction?.user.global_name,
+        displayName: (interaction.member?.user.global_name || interaction?.user.global_name).replace(/[^a-z0-9]/gi, '\\$&'),
         userId: interaction.member?.user?.id || interaction.user?.id,
         inputs: options
       };
