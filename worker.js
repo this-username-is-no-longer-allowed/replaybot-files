@@ -1,5 +1,5 @@
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     // Discord only sends POSTs
     if (request.method !== "POST") {
       return new Response("OK", { status: 200 });
@@ -67,7 +67,7 @@ export default {
         });
       };
       
-      request.waitUntil(injectAndWake());
+      ctx.waitUntil(injectAndWake());
 
       // Defer reply (Discord shows "thinking…")
       return new Response(
