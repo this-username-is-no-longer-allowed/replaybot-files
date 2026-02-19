@@ -18,6 +18,6 @@ persist = true
 head_sampling_rate = 1
 
 [[workflows]]
-name = "star-engine-render"
+name = "replaybot-files"
 binding = "RENDER_WORKFLOW"
 class_name = "RenderWorkflow"
