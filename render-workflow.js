@@ -1,11 +1,11 @@
 import { WorkflowEntrypoint } from 'cloudflare:workers';
 
 export class RenderWorkflow extends WorkflowEntrypoint {
-  async run(event, env) {
+  async run(event, step) {
     const { payload, initialState } = event.params;
     if (initialState === 'SLEEPING') {
       await this.step.do('check-and-wake', async () => {
-        await fetch(`https://${env.HF_SPACE_ID.replace('/', '.')}.hf.space`, {
+        await fetch(`https://${this.env.HF_SPACE_ID.replace('/', '.')}.hf.space`, {
           method: "GET",
           signal: AbortSignal.timeout(5000)
         })
@@ -31,11 +31,11 @@ export class RenderWorkflow extends WorkflowEntrypoint {
     });
 
     await this.step.do('final-dispatch', async () => {
-      const response = await fetch(`https://${env.HF_SPACE_ID.replace('/', '.')}.hf.space/direct-dispatch`, {
+      const response = await fetch(`https://${this.env.HF_SPACE_ID.replace('/', '.')}.hf.space/direct-dispatch`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json", 
-          "x-engine-key": env.ENGINE_API_KEY
+          "x-engine-key": this.env.ENGINE_API_KEY
         },
         body: JSON.stringify(payload)
       });
