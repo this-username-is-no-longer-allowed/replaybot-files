@@ -61,7 +61,7 @@ export default {
         });
         const statusData = await statusRes.json();
         const state = statusData.runtime?.stage;
-        console.log(state);
+        console.log(state, state === 'RUNNING');
       };
       
       ctx.waitUntil(handleDispatch());
