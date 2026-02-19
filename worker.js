@@ -54,17 +54,14 @@ export default {
 
       // Direct Inject & Wakeup
       const handleDispatch = async () => {
-        await fetch(`https://huggingface.co/api/spaces/${env.HF_SPACE_ID}/variables`, {
-          method: "POST",
+        const statusRes = await fetch(`https://huggingface.co/api/spaces/${env.HF_SPACE_ID}`, {
           headers: {
-            "Authorization": `Bearer ${env.HF_TOKEN}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            key: "CURRENT_JOB_JSON",
-            value: JSON.stringify(payload)
-          })
+            "Authorization": `Bearer ${env.HF_TOKEN}`
+          }
         });
+        const statusData = await statusRes.json();
+        const state = statusData.runtime?.stage;
+        console.log(state);
       };
       
       ctx.waitUntil(handleDispatch());
