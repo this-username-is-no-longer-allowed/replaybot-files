@@ -61,7 +61,23 @@ export default {
         });
         const statusData = await statusRes.json();
         const state = statusData.runtime?.stage;
-        console.log(state, state === 'RUNNING');
+
+        if (state === 'RUNNING') {
+          const hotPath = await fetch(`https://${env.HF_SPACE_ID.replace('/', '-')}.hf.space/direct-dispatch`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-engine-key": env.ENGINE_API_KEY
+            },
+            body: JSON.stringify(payload),
+            signal: AbortSignal.timeout(3000)
+          });
+          if (hotPath.ok) return;
+        }
+        await env.RENDER_WORKFLOW.create({
+          id: interaction.id,
+          params: { payload, initialState: state }
+        });
       };
       
       ctx.waitUntil(handleDispatch());
