@@ -4,7 +4,7 @@ export class RenderWorkflow extends WorkflowEntrypoint {
   async run(event, step) {
     const { payload, initialState } = event.params;
     if (initialState === 'SLEEPING') {
-      await this.step.do('check-and-wake', async () => {
+      await step.do('check-and-wake', async () => {
         await fetch(`https://${this.env.HF_SPACE_ID.replace('/', '.')}.hf.space`, {
           method: "GET",
           signal: AbortSignal.timeout(5000)
@@ -13,7 +13,7 @@ export class RenderWorkflow extends WorkflowEntrypoint {
       });
     }
     
-    await this.step.do('wait-for-server-ready', async () => {
+    await step.do('wait-for-server-ready', async () => {
       for (let ready, attempt = 0; !ready && attempt < 40; attempt++) {
         try {
           const ping = await fetch(`https://${env.HF_SPACE_ID.replace('/', '.')}.hf.space/ping`, {
@@ -30,7 +30,7 @@ export class RenderWorkflow extends WorkflowEntrypoint {
       }
     });
 
-    await this.step.do('final-dispatch', async () => {
+    await step.do('final-dispatch', async () => {
       const response = await fetch(`https://${this.env.HF_SPACE_ID.replace('/', '.')}.hf.space/direct-dispatch`, {
         method: "POST",
         headers: {
