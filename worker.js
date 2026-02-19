@@ -53,7 +53,7 @@ export default {
       };
 
       // Direct Inject & Wakeup
-      const injectAndWake = async () => {
+      const handleDispatch = async () => {
         await fetch(`https://huggingface.co/api/spaces/${env.HF_SPACE_ID}/variables`, {
           method: "POST",
           headers: {
@@ -67,9 +67,8 @@ export default {
         });
       };
       
-      ctx.waitUntil(injectAndWake());
+      ctx.waitUntil(handleDispatch());
 
-      // Defer reply (Discord shows "thinking…")
       return new Response(
         JSON.stringify({ type: 5 }),
         { headers: { "Content-Type": "application/json" } }
