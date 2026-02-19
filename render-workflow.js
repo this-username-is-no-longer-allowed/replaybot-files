@@ -3,7 +3,7 @@ import { WorkflowEntrypoint } from 'cloudflare:workers';
 export class RenderWorkflow extends WorkflowEntrypoint {
   async run(event, env) {
     const { payload, initialState } = event.params;
-    if (initialState === 'SLEEPING' {
+    if (initialState === 'SLEEPING') {
       await this.step.do('check-and-wake', async () => {
         await fetch(`https://${env.HF_SPACE_ID.replace('/', '.')}.hf.space`, {
           method: "GET",
