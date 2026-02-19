@@ -1,4 +1,4 @@
-import { RenderWorkflow } from './render-workflow.js';
+export { RenderWorkflow } from './render-workflow.js';
 
 export default {
   async fetch(request, env, ctx) {
@@ -124,5 +124,3 @@ function hexToUint8Array(hex) {
   }
   return bytes;
 }
-
-export { RenderWorkflow };
