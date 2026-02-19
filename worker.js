@@ -122,3 +122,5 @@ function hexToUint8Array(hex) {
   }
   return bytes;
 }
+
+export { RenderWorkflow };
