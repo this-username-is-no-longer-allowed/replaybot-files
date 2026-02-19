@@ -16,3 +16,9 @@ invocation_logs = true
 enabled = false
 persist = true
 head_sampling_rate = 1
+
+[[workflows]]
+name = "star-engine-render"
+binding = "RENDER_WORKFLOW"
+class_name = "RenderWorkflow"
+path = "render-workflow.js"
