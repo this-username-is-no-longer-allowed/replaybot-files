@@ -1,3 +1,5 @@
+import { RenderWorkflow } from './render-workflow.js';
+
 export default {
   async fetch(request, env, ctx) {
     // Discord only sends POSTs
