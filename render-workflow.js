@@ -10,7 +10,7 @@ export class RenderWorkflow extends WorkflowEntrypoint {
           signal: AbortSignal.timeout(5000)
         })
         .catch(() => {});
-      }
+      });
     }
     
     await this.step.do('wait-for-server-ready', async () => {
