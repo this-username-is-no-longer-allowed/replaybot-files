@@ -24,10 +24,11 @@ export class RenderWorkflow extends WorkflowEntrypoint {
         }
       });
     }
-    
-    await step.do('wait-for-server-ready', async () => {
-      for (let ready, attempt = 0; !ready && attempt < 40; attempt++) {
-        try {
+
+    let ready = false;
+    for (let attempt = 0; !ready && attempt < 40; attempt++) {
+      try {
+        await step.do(`check-attempt-${attempt}`, async () => {
           const ping = await fetch(`https://${this.env.HF_SPACE_ID.replace('/', '.')}.hf.space/ping`, {
             headers: {
               "Authorization": `Bearer ${this.env.HF_TOKEN}`
@@ -37,13 +38,14 @@ export class RenderWorkflow extends WorkflowEntrypoint {
           });
 
           if (ping.ok) {
-            ready = true;
+           ready = true;
           }
-        } catch {
-          await this.sleep('5 seconds');
         }
+      } catch {
+        await this.sleep('5 seconds');
       }
-    });
+    }
+    if (!ready) throw new Error("Space took too long to respond");
 
     await step.do('final-dispatch', async () => {
       const response = await fetch(`https://${this.env.HF_SPACE_ID.replace('/', '.')}.hf.space/direct-dispatch`, {
