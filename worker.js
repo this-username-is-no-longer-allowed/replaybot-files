@@ -70,7 +70,8 @@ export default {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              "x-engine-key": env.ENGINE_API_KEY
+              "x-engine-key": env.ENGINE_API_KEY,
+              "Authorization": `Bearer ${env.HF_TOKEN}`
             },
             body: JSON.stringify(payload),
             signal: AbortSignal.timeout(3000)
