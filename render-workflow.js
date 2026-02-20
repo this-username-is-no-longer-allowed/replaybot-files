@@ -4,10 +4,11 @@ export class RenderWorkflow extends WorkflowEntrypoint {
   async run(event, step) {
     const { payload, initialState } = event.payload;
     console.log(initialState);
+    const hostUrl = `https://${this.env.HF_SPACE_ID.replace('/', '-').toLowerCase()}.hf.space`;
     if (initialState === 'SLEEPING' || initialState === 'STOPPED' || initialState === 'PAUSED') {
       await step.do('check-and-wake', async () => {
         if (initialState === 'SLEEPING') {
-          await fetch(`https://${this.env.HF_SPACE_ID.replace('/', '-')}.hf.space`, {
+          await fetch(hostUrl, {
             headers: {
               "Authorization": `Bearer ${this.env.HF_TOKEN}`
             },
@@ -16,7 +17,7 @@ export class RenderWorkflow extends WorkflowEntrypoint {
           })
           .catch(() => {});
         } else {
-          await fetch(`https://huggingface.co/api/spaces/${this.env.HF_SPACE_ID}/restart`, {
+          await fetch(`https://huggingface.co/${this.env.HF_SPACE_ID}/restart`, {
             headers: {
               "Authorization": `Bearer ${this.env.HF_TOKEN}`
             },
@@ -30,11 +31,11 @@ export class RenderWorkflow extends WorkflowEntrypoint {
     for (let attempt = 0; !ready && attempt < 40; attempt++) {
       ready = await step.do(`check-attempt-${attempt}`, async () => {
         try {
-          const ping = await fetch(`https://${this.env.HF_SPACE_ID.replace('/', '-')}.hf.space/ping`, {
+          const ping = await fetch(`${hostUrl}/ping`, {
             headers: {
               "Authorization": `Bearer ${this.env.HF_TOKEN}`
             },
-            method: 'GET',
+            method: "GET",
             signal: AbortSignal.timeout(3000)
           });
 
@@ -50,7 +51,7 @@ export class RenderWorkflow extends WorkflowEntrypoint {
     if (!ready) throw new Error("Space took too long to respond");
 
     await step.do('final-dispatch', async () => {
-      const response = await fetch(`https://${this.env.HF_SPACE_ID.replace('/', '-')}.hf.space/direct-dispatch`, {
+      const response = await fetch(`${hostUrl}/direct-dispatch`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json", 
