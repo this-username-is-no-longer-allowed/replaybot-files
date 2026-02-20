@@ -5,14 +5,23 @@ export class RenderWorkflow extends WorkflowEntrypoint {
     const { payload, initialState } = event.payload;
     if (initialState === 'SLEEPING' || initialState === 'STOPPED' || initialState === 'PAUSED') {
       await step.do('check-and-wake', async () => {
-        await fetch(`https://${this.env.HF_SPACE_ID.replace('/', '.')}.hf.space`, {
-          headers: {
-            "Authorization": `Bearer ${this.env.HF_TOKEN}`
-          },
-          method: "GET",
-          signal: AbortSignal.timeout(5000)
-        })
-        .catch(() => {});
+        if (initialState === 'SLEEPING') {
+          await fetch(`https://${this.env.HF_SPACE_ID.replace('/', '.')}.hf.space`, {
+            headers: {
+              "Authorization": `Bearer ${this.env.HF_TOKEN}`
+            },
+            method: "GET",
+            signal: AbortSignal.timeout(5000)
+          })
+          .catch(() => {});
+        } else {
+          await fetch(`https://huggingface.co/api/spaces/${this.env.HF_SPACE_ID}/restart`, {
+            headers: {
+              "Authorization": `Bearer ${this.env.HF_TOKEN}`
+            },
+            method: "POST"
+          });
+        }
       });
     }
     
