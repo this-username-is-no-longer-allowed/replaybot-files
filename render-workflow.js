@@ -2,6 +2,7 @@ import { WorkflowEntrypoint } from 'cloudflare:workers';
 
 export class RenderWorkflow extends WorkflowEntrypoint {
   async run(event, step) {
+    console.log('workflow begin');
     const { payload, initialState } = event.payload;
     if (initialState === 'SLEEPING') {
       await step.do('check-and-wake', async () => {
@@ -16,7 +17,7 @@ export class RenderWorkflow extends WorkflowEntrypoint {
     await step.do('wait-for-server-ready', async () => {
       for (let ready, attempt = 0; !ready && attempt < 40; attempt++) {
         try {
-          const ping = await fetch(`https://${env.HF_SPACE_ID.replace('/', '.')}.hf.space/ping`, {
+          const ping = await fetch(`https://${this.env.HF_SPACE_ID.replace('/', '.')}.hf.space/ping`, {
             method: 'GET',
             signal: AbortSignal.timeout(3000)
           });
