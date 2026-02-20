@@ -50,7 +50,7 @@ export class RenderWorkflow extends WorkflowEntrypoint {
     if (!ready) throw new Error("Space took too long to respond");
 
     await step.do('final-dispatch', async () => {
-      const response = await fetch(`https://${this.env.HF_SPACE_ID.replace('/', '.')}.hf.space/direct-dispatch`, {
+      const response = await fetch(`https://${this.env.HF_SPACE_ID.replace('/', '-')}.hf.space/direct-dispatch`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json", 
