@@ -27,8 +27,8 @@ export class RenderWorkflow extends WorkflowEntrypoint {
 
     let ready = false;
     for (let attempt = 0; !ready && attempt < 40; attempt++) {
-      try {
-        await step.do(`check-attempt-${attempt}`, async () => {
+      ready = await step.do(`check-attempt-${attempt}`, async () => {
+        try {
           const ping = await fetch(`https://${this.env.HF_SPACE_ID.replace('/', '.')}.hf.space/ping`, {
             headers: {
               "Authorization": `Bearer ${this.env.HF_TOKEN}`
@@ -37,11 +37,12 @@ export class RenderWorkflow extends WorkflowEntrypoint {
             signal: AbortSignal.timeout(3000)
           });
 
-          if (ping.ok) {
-           ready = true;
-          }
+          return ping.ok;
+        } catch {
+          return false;
         }
-      } catch {
+      });
+      if (!ready) {
         await this.sleep('5 seconds');
       }
     }
