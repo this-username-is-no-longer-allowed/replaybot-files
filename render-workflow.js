@@ -2,11 +2,11 @@ import { WorkflowEntrypoint } from 'cloudflare:workers';
 
 export class RenderWorkflow extends WorkflowEntrypoint {
   async run(event, step) {
-    const { payload, initialState } = event.payload;
+    const { payload, initialState } = event.params;
     if (initialState === 'SLEEPING' || initialState === 'STOPPED' || initialState === 'PAUSED') {
       await step.do('check-and-wake', async () => {
         if (initialState === 'SLEEPING') {
-          await fetch(`https://${this.env.HF_SPACE_ID.replace('/', '.')}.hf.space`, {
+          await fetch(`https://${this.env.HF_SPACE_ID.replace('/', '-')}.hf.space`, {
             headers: {
               "Authorization": `Bearer ${this.env.HF_TOKEN}`
             },
@@ -29,7 +29,7 @@ export class RenderWorkflow extends WorkflowEntrypoint {
     for (let attempt = 0; !ready && attempt < 40; attempt++) {
       ready = await step.do(`check-attempt-${attempt}`, async () => {
         try {
-          const ping = await fetch(`https://${this.env.HF_SPACE_ID.replace('/', '.')}.hf.space/ping`, {
+          const ping = await fetch(`https://${this.env.HF_SPACE_ID.replace('/', '-')}.hf.space/ping`, {
             headers: {
               "Authorization": `Bearer ${this.env.HF_TOKEN}`
             },
