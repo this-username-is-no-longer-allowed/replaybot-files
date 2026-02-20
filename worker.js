@@ -78,7 +78,7 @@ export default {
         }
         await env.RENDER_WORKFLOW.create({
           id: interaction.id,
-          payload: { payload, initialState: state }
+          params: { payload, initialState: state }
         });
       };
       
