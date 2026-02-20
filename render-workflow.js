@@ -17,7 +17,7 @@ export class RenderWorkflow extends WorkflowEntrypoint {
           })
           .catch(() => {});
         } else {
-          await fetch(`https://huggingface.co/${this.env.HF_SPACE_ID}/restart`, {
+          await fetch(`https://huggingface.co/api/spaces/${this.env.HF_SPACE_ID}/restart`, {
             headers: {
               "Authorization": `Bearer ${this.env.HF_TOKEN}`
             },
