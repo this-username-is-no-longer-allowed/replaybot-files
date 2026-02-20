@@ -65,7 +65,7 @@ export default {
         const state = statusData.runtime?.stage;
         console.log(state);
 
-        if (state === 'RUNNING') {
+        if (state === 'RUNNING' || state === 'RUNNING_BUILDING') {
           const hotPath = await fetch(`https://${env.HF_SPACE_ID.replace('/', '-')}.hf.space/direct-dispatch`, {
             method: "POST",
             headers: {
