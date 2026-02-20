@@ -38,8 +38,11 @@ export class RenderWorkflow extends WorkflowEntrypoint {
             method: "GET",
             signal: AbortSignal.timeout(3000)
           });
+          if (!ping.ok) return false;
 
-          return ping.ok;
+          const data = await ping.json();
+
+          return data.source === "express" && data.ready === true;
         } catch {
           return false;
         }
