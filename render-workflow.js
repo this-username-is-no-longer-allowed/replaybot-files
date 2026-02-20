@@ -2,6 +2,7 @@ import { WorkflowEntrypoint } from 'cloudflare:workers';
 
 export class RenderWorkflow extends WorkflowEntrypoint {
   async run(event, step) {
+    try{
     const { payload, initialState } = event.payload;
     console.log(initialState);
     const hostUrl = `https://${this.env.HF_SPACE_ID.replace('/', '-')}.hf.space`;
@@ -71,5 +72,6 @@ export class RenderWorkflow extends WorkflowEntrypoint {
         throw new Error('Dispatch failed with status: ' + response.status);
       }
     });
+  }catch(e){console.error(e);}
   }
 }
