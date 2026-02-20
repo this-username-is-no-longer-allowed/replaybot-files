@@ -27,7 +27,7 @@ export class RenderWorkflow extends WorkflowEntrypoint {
         }
       });
     }
-    await this.sleep('10 seconds');
+    await sleep('10 seconds');
 
     let ready = false;
     for (let attempt = 0; !ready && attempt < 40; attempt++) {
@@ -53,7 +53,7 @@ export class RenderWorkflow extends WorkflowEntrypoint {
         }
       });
       if (!ready) {
-        await this.sleep('5 seconds');
+        await sleep('5 seconds');
       }
     }
     if (!ready) throw new Error("Space took too long to respond");
