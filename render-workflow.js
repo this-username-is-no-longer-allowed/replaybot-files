@@ -2,7 +2,7 @@ import { WorkflowEntrypoint } from 'cloudflare:workers';
 
 export class RenderWorkflow extends WorkflowEntrypoint {
   async run(event, step) {
-    const { payload, initialState } = event.params;
+    const { payload, initialState } = event.payload;
     console.log(initialState);
     if (initialState === 'SLEEPING' || initialState === 'STOPPED' || initialState === 'PAUSED') {
       await step.do('check-and-wake', async () => {
