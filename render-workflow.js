@@ -4,7 +4,7 @@ export class RenderWorkflow extends WorkflowEntrypoint {
   async run(event, step) {
     const { payload, initialState } = event.payload;
     console.log(initialState);
-    const hostUrl = `https://${this.env.HF_SPACE_ID.replace('/', '-').toLowerCase()}.hf.space`;
+    const hostUrl = `https://${this.env.HF_SPACE_ID.replace('/', '-')}.hf.space`;
     if (initialState === 'SLEEPING' || initialState === 'STOPPED' || initialState === 'PAUSED') {
       await step.do('check-and-wake', async () => {
         if (initialState === 'SLEEPING') {
