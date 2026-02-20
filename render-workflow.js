@@ -7,6 +7,9 @@ export class RenderWorkflow extends WorkflowEntrypoint {
     if (initialState === 'SLEEPING') {
       await step.do('check-and-wake', async () => {
         await fetch(`https://${this.env.HF_SPACE_ID.replace('/', '.')}.hf.space`, {
+          headers: {
+            "Authorization": `Bearer ${this.env.HF_TOKEN}`
+          },
           method: "GET",
           signal: AbortSignal.timeout(5000)
         })
@@ -18,6 +21,9 @@ export class RenderWorkflow extends WorkflowEntrypoint {
       for (let ready, attempt = 0; !ready && attempt < 40; attempt++) {
         try {
           const ping = await fetch(`https://${this.env.HF_SPACE_ID.replace('/', '.')}.hf.space/ping`, {
+            headers: {
+              "Authorization": `Bearer ${this.env.HF_TOKEN}`
+            },
             method: 'GET',
             signal: AbortSignal.timeout(3000)
           });
@@ -36,7 +42,8 @@ export class RenderWorkflow extends WorkflowEntrypoint {
         method: "POST",
         headers: {
           "Content-Type": "application/json", 
-          "x-engine-key": this.env.ENGINE_API_KEY
+          "x-engine-key": this.env.ENGINE_API_KEY,
+          "Authorization": `Bearer ${this.env.HF_TOKEN}`
         },
         body: JSON.stringify(payload)
       });
