@@ -63,6 +63,7 @@ export default {
         });
         const statusData = await statusRes.json();
         const state = statusData.runtime?.stage;
+        console.log(state);
 
         if (state === 'RUNNING') {
           const hotPath = await fetch(`https://${env.HF_SPACE_ID.replace('/', '-')}.hf.space/direct-dispatch`, {
@@ -76,10 +77,14 @@ export default {
           });
           if (hotPath.ok) return;
         }
-        await env.RENDER_WORKFLOW.create({
-          id: interaction.id,
-          params: { payload, initialState: state }
-        });
+        try {
+          await env.RENDER_WORKFLOW.create({
+            id: interaction.id,
+            params: { payload, initialState: state }
+          });
+        } catch (error) {
+          console.error(error);
+        }
       };
       
       ctx.waitUntil(handleDispatch());
