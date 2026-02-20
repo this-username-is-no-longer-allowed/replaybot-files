@@ -40,9 +40,6 @@ export class RenderWorkflow extends WorkflowEntrypoint {
             method: "GET",
             signal: AbortSignal.timeout(3000)
           });
-          const text = await ping.text();
-          console.log("Ping status:", ping.status);
-          console.log("Ping body:", text);
           if (!ping.ok) return false;
 
           const data = await ping.json();
