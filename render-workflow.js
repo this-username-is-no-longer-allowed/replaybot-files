@@ -4,7 +4,6 @@ export class RenderWorkflow extends WorkflowEntrypoint {
   async run(event, step) {
     try{
     const { payload, initialState } = event.payload;
-    console.log(initialState);
     const hostUrl = `https://${this.env.HF_SPACE_ID.replace('/', '-')}.hf.space`;
     if (initialState === 'SLEEPING' || initialState === 'STOPPED' || initialState === 'PAUSED') {
       await step.do('check-and-wake', async () => {
@@ -18,7 +17,7 @@ export class RenderWorkflow extends WorkflowEntrypoint {
           })
           .catch(() => {});
         } else {
-          await fetch(`https://huggingface.co/api/spaces/${this.env.HF_SPACE_ID}/restart`, {
+          await fetch(`https://huggingface.co/api/spaces/${this.env.HF_SPACE_ID}/${initialState === 'PAUSED' ? 'unpause' : 'restart'}`, {
             headers: {
               "Authorization": `Bearer ${this.env.HF_TOKEN}`
             },
@@ -27,7 +26,7 @@ export class RenderWorkflow extends WorkflowEntrypoint {
         }
       });
     }
-    await step.sleep('wait-for-space', '10 seconds');
+    await step.sleep('wait-for-space', '2 seconds');
 
     let ready = false;
     for (let attempt = 0; !ready && attempt < 40; attempt++) {
